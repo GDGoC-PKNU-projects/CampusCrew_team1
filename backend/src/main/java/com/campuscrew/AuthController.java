@@ -1,18 +1,23 @@
 package com.campuscrew;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import com.campuscrew.dto.SignUpRequestDTO;
+import com.campuscrew.dto.SignUpResponseDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @PostMapping("/signup")
-    public String signup(@RequestParam String username, @RequestParam String password) {
+    private final AuthService authService;
 
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<SignUpResponseDTO>> signUp(@RequestBody SignUpRequestDTO signUpRequest) {
+        SignUpResponseDTO data = authService.signUp(signUpRequest);
+        return ResponseEntity.ok(ApiResponse.success(data, "회원가입이 완료되었습니다."));
     }
 }
