@@ -3,6 +3,8 @@ package com.campuscrew.service;
 import com.campuscrew.dto.SignUpRequestDTO;
 import com.campuscrew.dto.SignUpResponseDTO;
 import com.campuscrew.entity.UserEntity;
+import com.campuscrew.exception.CustomException;
+import com.campuscrew.exception.ErrorCode;
 import com.campuscrew.repository.AuthRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class AuthService {
 
     public SignUpResponseDTO signUp(SignUpRequestDTO signUpRequest) {
         if (authRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new CustomException(ErrorCode.CONFLICT_001);
         }
 
         UserEntity userEntity = new UserEntity(
