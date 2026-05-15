@@ -1,4 +1,4 @@
-package com.campuscrew;
+package com.campuscrew.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

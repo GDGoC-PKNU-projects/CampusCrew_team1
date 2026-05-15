@@ -1,5 +1,6 @@
-package com.campuscrew;
+package com.campuscrew.repository;
 
+import com.campuscrew.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthRepository extends JpaRepository<UserEntity, Long> {

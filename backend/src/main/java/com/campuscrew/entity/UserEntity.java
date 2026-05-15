@@ -1,4 +1,4 @@
-package com.campuscrew;
+package com.campuscrew.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

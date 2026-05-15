@@ -1,7 +1,9 @@
-package com.campuscrew;
+package com.campuscrew.service;
 
 import com.campuscrew.dto.SignUpRequestDTO;
 import com.campuscrew.dto.SignUpResponseDTO;
+import com.campuscrew.entity.UserEntity;
+import com.campuscrew.repository.AuthRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +31,11 @@ public class AuthService {
         );
         UserEntity savedUser = authRepository.save(userEntity);
 
-        SignUpResponseDTO response = new SignUpResponseDTO();
-        response.setId(savedUser.getId());
-        response.setName(savedUser.getName());
-        response.setEmail(savedUser.getEmail());
-        return response;
+        return SignUpResponseDTO.builder()
+                .id(savedUser.getId())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .build();
     }
 
 }

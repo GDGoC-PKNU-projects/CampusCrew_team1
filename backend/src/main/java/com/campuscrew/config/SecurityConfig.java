@@ -1,4 +1,4 @@
-package com.campuscrew;
+package com.campuscrew.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

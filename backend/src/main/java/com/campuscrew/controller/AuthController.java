@@ -1,7 +1,9 @@
-package com.campuscrew;
+package com.campuscrew.controller;
 
+import com.campuscrew.common.ApiResponse;
 import com.campuscrew.dto.SignUpRequestDTO;
 import com.campuscrew.dto.SignUpResponseDTO;
+import com.campuscrew.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
