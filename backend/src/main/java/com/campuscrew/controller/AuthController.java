@@ -5,6 +5,7 @@ import com.campuscrew.dto.LoginRequestDTO;
 import com.campuscrew.dto.LoginResponseDTO;
 import com.campuscrew.dto.MeResponseDTO;
 import com.campuscrew.dto.SignUpRequestDTO;
+import jakarta.validation.Valid;
 import com.campuscrew.dto.SignUpResponseDTO;
 import com.campuscrew.entity.UserEntity;
 import com.campuscrew.service.AuthService;
@@ -24,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<SignUpResponseDTO>> signUp(@RequestBody SignUpRequestDTO signUpRequest) {
+    public ResponseEntity<ApiResponse<SignUpResponseDTO>> signUp(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
         SignUpResponseDTO data = authService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(data, "회원가입이 완료되었습니다."));
     }
