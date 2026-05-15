@@ -4,6 +4,7 @@ import com.campuscrew.common.ApiResponse;
 import com.campuscrew.dto.SignUpRequestDTO;
 import com.campuscrew.dto.SignUpResponseDTO;
 import com.campuscrew.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponseDTO>> signUp(@RequestBody SignUpRequestDTO signUpRequest) {
         SignUpResponseDTO data = authService.signUp(signUpRequest);
-        return ResponseEntity.ok(ApiResponse.success(data, "회원가입이 완료되었습니다."));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(data, "회원가입이 완료되었습니다."));
     }
 }
