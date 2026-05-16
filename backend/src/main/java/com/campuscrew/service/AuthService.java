@@ -30,6 +30,10 @@ public class AuthService {
             throw new CustomException(ErrorCode.CONFLICT_001);
         }
 
+        if (authRepository.existsByStudentId(signUpRequest.getStudentId())) {
+            throw new CustomException(ErrorCode.CONFLICT_002);
+        }
+
         UserEntity userEntity = new UserEntity(
                 signUpRequest.getName(),
                 signUpRequest.getStudentId(),
