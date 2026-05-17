@@ -88,14 +88,14 @@ Spring 코드보다 먼저 "HTTP 요청이 어떻게 들어오고, 어떤 계층
 
 > [!NOTE]
 > 아래 내용을 직접 적으면서 이번 주 이해도를 점검한다.
-> - 요청이 서버 안에서 흐르는 순서:
-> - 각 계층의 역할:
-> - 내가 아직 헷갈리는 백엔드 용어:
+> - 요청이 서버 안에서 흐르는 순서: Request-> Controller -> Service -> Repository -> Service -> Controller -> Response
+> - 각 계층의 역할: Controller: 클라이언트와 통신을 주고받는다. Service: 컨트롤러가 받은 Request를 서비스 로직에 대입하고, Repository와 상호작용 후, Response를 만들어서 내보낸다. Repository: DB에 간접적으로 상호작용 할수 있게 해준다.
+> - 내가 아직 헷갈리는 백엔드 용어: DTO 아직 어떻게 쓰라는건지 잘 모르겠다.
 
 ## 체크리스트
 
-- [ ] HTTP 요청/응답과 상태 코드의 기본 역할을 이해했다.
-- [ ] Controller, Service, Repository의 역할 차이를 설명할 수 있다.
-- [ ] 인증과 인가의 차이를 설명할 수 있다.
-- [ ] 공통 응답 형식이 왜 필요한지 이해했다.
-- [ ] STEP 2에서 인증 흐름을 구현할 준비가 되었다.
+- [x] HTTP 요청/응답과 상태 코드의 기본 역할을 이해했다.
+- [x] Controller, Service, Repository의 역할 차이를 설명할 수 있다.
+- [x] 인증과 인가의 차이를 설명할 수 있다.
+- [x] 공통 응답 형식이 왜 필요한지 이해했다.
+- [x] STEP 2에서 인증 흐름을 구현할 준비가 되었다.
