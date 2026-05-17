@@ -43,6 +43,7 @@ public class AuthController {
                 .name(user.getName())
                 .email(user.getEmail())
                 .studentId(user.getStudentId())
+                .createdAt(user.getCreatedAt())
                 .build();
         return ResponseEntity.ok(ApiResponse.success(data, null));
     }

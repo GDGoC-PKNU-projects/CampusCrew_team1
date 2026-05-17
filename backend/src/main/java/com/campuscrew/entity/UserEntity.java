@@ -28,7 +28,7 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String studentId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
     public UserEntity(String name, String studentId, String email, String password) {

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,4 +16,5 @@ public class MeResponseDTO {
     private String name;
     private String email;
     private String studentId;
+    private LocalDateTime createdAt;
 }

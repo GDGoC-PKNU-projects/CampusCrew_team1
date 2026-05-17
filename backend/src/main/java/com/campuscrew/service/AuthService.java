@@ -46,6 +46,7 @@ public class AuthService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
+                .createdAt(savedUser.getCreatedAt())
                 .build();
     }
 
@@ -63,6 +64,7 @@ public class AuthService {
                         .id(user.getId())
                         .name(user.getName())
                         .email(user.getEmail())
+                        .createdAt(user.getCreatedAt())
                         .build())
                 .build();
     }
