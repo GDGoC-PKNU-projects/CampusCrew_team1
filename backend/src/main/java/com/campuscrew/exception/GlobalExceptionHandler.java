@@ -1,6 +1,9 @@
 package com.campuscrew.exception;
 
+import com.campuscrew.common.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -8,13 +11,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+    protected ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+                .body(ApiResponse.error(errorCode.getMessage()));
     }
 
-    // 에러 응답 형식을 위한 내부 record
-    private record ErrorResponse(String code, String message) {}
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException e) {
+        ErrorCode errorCode = e.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .map(error -> ErrorCode.valueOf(error.getDefaultMessage()))
+                .orElse(ErrorCode.VALID_001);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(errorCode.getMessage()));
+    }
+
 }
