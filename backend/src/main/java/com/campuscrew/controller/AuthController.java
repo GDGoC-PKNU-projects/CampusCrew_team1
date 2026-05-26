@@ -1,6 +1,7 @@
 package com.campuscrew.controller;
 
 import com.campuscrew.common.ApiResponse;
+import com.campuscrew.common.SuccessCode;
 import com.campuscrew.dto.LoginRequestDTO;
 import com.campuscrew.dto.LoginResponseDTO;
 import com.campuscrew.dto.MeResponseDTO;
@@ -27,13 +28,13 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponseDTO>> signUp(@Valid @RequestBody SignUpRequestDTO signUpRequest) {
         SignUpResponseDTO data = authService.signUp(signUpRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(data, "회원가입이 완료되었습니다."));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(data, SuccessCode.SUCCESS_AUTH_001));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponseDTO>> login(@RequestBody LoginRequestDTO loginRequest) {
         LoginResponseDTO data = authService.login(loginRequest);
-        return ResponseEntity.ok(ApiResponse.success(data, "로그인에 성공했습니다."));
+        return ResponseEntity.ok(ApiResponse.success(data, SuccessCode.SUCCESS_AUTH_002));
     }
 
     @GetMapping("/me")
@@ -45,6 +46,6 @@ public class AuthController {
                 .studentId(user.getStudentId())
                 .createdAt(user.getCreatedAt())
                 .build();
-        return ResponseEntity.ok(ApiResponse.success(data, null));
+        return ResponseEntity.ok(ApiResponse.success(data, SuccessCode.SUCCESS_AUTH_003));
     }
 }
