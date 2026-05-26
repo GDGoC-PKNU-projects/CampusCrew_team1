@@ -13,21 +13,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignUpRequestDTO {
 
-    @NotBlank
-    @Size(min = 2, max = 20)
+    @NotBlank(message = "VALID_001")
+    @Size(min = 2, max = 20, message = "VALID_NAME_001")
     private String name;
 
-    @NotBlank
-    @Pattern(regexp = "^[0-9]+$")
-    @Size(min = 8, max = 10)
+    @NotBlank(message = "VALID_001")
+    @Pattern(regexp = "^[0-9]+$", message = "VALID_STUID_001")
+    @Size(min = 8, max = 10, message = "VALID_STUID_002")
     private String studentId;
 
-    @NotBlank
-    @Email
-    @Size(max = 100)
+    @NotBlank(message = "VALID_001")
+    @Email(message = "VALID_EMAIL_001")
+    @Size(max = 100, message = "VALID_EMAIL_002")
     private String email;
 
-    @NotBlank
-    @Size(min = 8, max = 20)
+    @NotBlank(message = "VALID_001")
+    @Size(min = 8, max = 20, message = "VALID_PW_001")
     private String password;
 }

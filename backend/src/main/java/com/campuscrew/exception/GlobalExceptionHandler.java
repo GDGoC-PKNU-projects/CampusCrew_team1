@@ -22,21 +22,11 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException e) {
         ErrorCode errorCode = e.getBindingResult().getFieldErrors().stream()
                 .findFirst()
-                .map(error -> resolveErrorCode(error.getField(), error.getCode()))
+                .map(error -> ErrorCode.valueOf(error.getDefaultMessage()))
                 .orElse(ErrorCode.VALID_001);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(errorCode.getMessage()));
     }
 
-    private ErrorCode resolveErrorCode(String field, String code) {
-        if ("NotBlank".equals(code)) return ErrorCode.VALID_001;
-        return switch (field) {
-            case "name" -> ErrorCode.VALID_NAME_001;
-            case "studentId" -> "Pattern".equals(code) ? ErrorCode.VALID_STUID_001 : ErrorCode.VALID_STUID_002;
-            case "email" -> "Email".equals(code) ? ErrorCode.VALID_EMAIL_001 : ErrorCode.VALID_EMAIL_002;
-            case "password" -> ErrorCode.VALID_PW_001;
-            default -> ErrorCode.VALID_001;
-        };
-    }
 }
