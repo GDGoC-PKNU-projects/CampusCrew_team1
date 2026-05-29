@@ -79,6 +79,19 @@ class AuthIntegrationTest {
     }
 
     @Test
+    @DisplayName("회원가입 실패 - 학번 짧음")
+    void signUp_shortStuid() throws Exception {
+        SignUpRequestDTO request = new SignUpRequestDTO("김민수", "2026129", "minsu@example.com", "test1234");
+
+        mockMvc.perform(post(SIGNUP_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("학번은 8자 이상 10자 이하로 입력해야 합니다."));
+    }
+
+    @Test
     @DisplayName("회원가입 실패 - 비밀번호 너무 짧음")
     void signUp_shortPassword() throws Exception {
         SignUpRequestDTO request = new SignUpRequestDTO("김민수", "20251234", "minsu@test.com", "short1");
