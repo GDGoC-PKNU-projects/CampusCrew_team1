@@ -5,15 +5,18 @@ import com.campuscrew.dto.team.CreateTeamResponseDTO;
 import com.campuscrew.entity.MemberEntity;
 import com.campuscrew.entity.TeamEntity;
 import com.campuscrew.entity.UserEntity;
+import com.campuscrew.repository.MemberRepository;
 import com.campuscrew.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 
 @RequiredArgsConstructor
 @Service
 public class TeamService {
+    private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
 
 
@@ -31,6 +34,7 @@ public class TeamService {
     }
 
 
+    @Transactional
     public CreateTeamResponseDTO createTeam(CreateTeamRequestDTO createTeamRequest, UserEntity owner){
         String joinCode;
         do {joinCode = generateJoinCode();}
@@ -45,14 +49,16 @@ public class TeamService {
                 owner
         );
 
-        TeamEntity newTeam = teamRepository.save(teamEntity);
+        TeamEntity savedTeam = teamRepository.save(teamEntity);
 
+        MemberEntity ownerMember = new MemberEntity(savedTeam, owner, "OWNER");
+        memberRepository.save(ownerMember);
         return CreateTeamResponseDTO.builder()
-                .id(newTeam.getId())
-                .name(newTeam.getName())
-                .courseName(newTeam.getCourseName())
-                .description(newTeam.getDescription())
-                .joinCode(newTeam.getJoinCode())
+                .id(savedTeam.getId())
+                .name(savedTeam.getName())
+                .courseName(savedTeam.getCourseName())
+                .description(savedTeam.getDescription())
+                .joinCode(savedTeam.getJoinCode())
                 .build();
     }
 }
