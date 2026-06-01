@@ -2,6 +2,7 @@ package com.campuscrew.service;
 
 import com.campuscrew.dto.team.CreateTeamRequestDTO;
 import com.campuscrew.dto.team.CreateTeamResponseDTO;
+import com.campuscrew.dto.team.TeamResponseDTO;
 import com.campuscrew.entity.MemberEntity;
 import com.campuscrew.entity.TeamEntity;
 import com.campuscrew.entity.UserEntity;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +22,26 @@ public class TeamService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
 
+
+    public
+
+    public List<TeamResponseDTO> getMyTeams(UserEntity user){
+        List<TeamResponseDTO> result = new ArrayList<>();
+        List<MemberEntity> members = memberRepository.findByUser_Id(user.getId());
+        for (MemberEntity member: members){
+            TeamEntity team = member.getTeam();
+            Long teamId = team.getId();
+            result.add(TeamResponseDTO.builder()
+                    .id(teamId)
+                            .name(team.getName())
+                            .courseName(team.getCourseName())
+                            .description(team.getDescription())
+                            .memberCount(memberRepository.countByTeam_Id(teamId))
+                    .build());
+        }
+        return result;
+
+    }
 
     //joinCode생성용 문자
     private static final String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
