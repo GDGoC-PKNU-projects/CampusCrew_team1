@@ -1,11 +1,11 @@
 package com.campuscrew.service;
 
-import com.campuscrew.dto.team.CreateTeamRequestDTO;
-import com.campuscrew.dto.team.CreateTeamResponseDTO;
-import com.campuscrew.dto.team.TeamResponseDTO;
+import com.campuscrew.dto.team.*;
 import com.campuscrew.entity.MemberEntity;
 import com.campuscrew.entity.TeamEntity;
 import com.campuscrew.entity.UserEntity;
+import com.campuscrew.exception.CustomException;
+import com.campuscrew.exception.ErrorCode;
 import com.campuscrew.repository.MemberRepository;
 import com.campuscrew.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,11 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
 
-    public
+    public void validateMembership(Long teamId, Long userId) {
+        if (!memberRepository.existsByTeam_IdAndUser_Id(teamId, userId)){
+           throw  new CustomException(ErrorCode.FORBIDDEN_001);
+        }
+    }
 
     public List<TeamResponseDTO> getMyTeams(UserEntity user){
         List<TeamResponseDTO> result = new ArrayList<>();
@@ -41,6 +45,22 @@ public class TeamService {
         }
         return result;
 
+    }
+
+    @Transactional(readOnly = true)
+    public TeamDetailResponseDTO getTeamDetail(Long teamId, UserEntity user){
+        validateMembership(teamId, user.getId());
+        TeamEntity team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_002));
+        return TeamDetailResponseDTO.builder()
+                .id(team.getId())
+                .name(team.getName())
+                .courseName(team.getCourseName())
+                .description(team.getDescription())
+                .joinCode(team.getJoinCode())
+                .ownerId(team.getOwner().getId())
+                .memberCount(memberRepository.countByTeam_Id(teamId))
+                .build();
     }
 
     //joinCode생성용 문자
@@ -82,6 +102,30 @@ public class TeamService {
                 .courseName(savedTeam.getCourseName())
                 .description(savedTeam.getDescription())
                 .joinCode(savedTeam.getJoinCode())
+                .build();
+    }
+
+
+
+    @Transactional
+    public TeamJoinResponseDTO joinTeam(TeamJoinRequestDTO joinData, UserEntity user){
+        String joinCode = joinData.getJoinCode();
+        Long userId = user.getId();
+        TeamEntity team = teamRepository.findByJoinCode(joinCode);
+        if (team == null){
+            throw new CustomException(ErrorCode.NOT_FOUND_002);
+        }
+
+
+        if (memberRepository.existsByTeam_IdAndUser_Id(team.getId(), userId)){
+            throw new CustomException(ErrorCode.CONFLICT_003);
+        }
+
+        MemberEntity commonMember = new MemberEntity(team, user, "MEMBER");
+        memberRepository.save(commonMember);
+        return TeamJoinResponseDTO.builder()
+                .teamId(team.getId())
+                .teamName(team.getName())
                 .build();
     }
 }
