@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,22 +28,9 @@ public class TeamService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<TeamResponseDTO> getMyTeams(UserEntity user){
-        List<TeamResponseDTO> result = new ArrayList<>();
-        List<MemberEntity> members = memberRepository.findByUser_Id(user.getId());
-        for (MemberEntity member: members){
-            TeamEntity team = member.getTeam();
-            Long teamId = team.getId();
-            result.add(TeamResponseDTO.builder()
-                    .id(teamId)
-                            .name(team.getName())
-                            .courseName(team.getCourseName())
-                            .description(team.getDescription())
-                            .memberCount(memberRepository.countByTeam_Id(teamId))
-                    .build());
-        }
-        return result;
-
+        return memberRepository.findMyTeamsWithMemberCount(user.getId());
     }
 
     @Transactional(readOnly = true)
@@ -111,11 +97,8 @@ public class TeamService {
     public TeamJoinResponseDTO joinTeam(TeamJoinRequestDTO joinData, UserEntity user){
         String joinCode = joinData.getJoinCode();
         Long userId = user.getId();
-        TeamEntity team = teamRepository.findByJoinCode(joinCode);
-        if (team == null){
-            throw new CustomException(ErrorCode.NOT_FOUND_002);
-        }
-
+        TeamEntity team = teamRepository.findByJoinCode(joinCode)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_002));
 
         if (memberRepository.existsByTeam_IdAndUser_Id(team.getId(), userId)){
             throw new CustomException(ErrorCode.CONFLICT_003);
